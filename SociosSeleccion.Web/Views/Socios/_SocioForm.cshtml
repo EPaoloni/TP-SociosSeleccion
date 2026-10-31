@@ -1,0 +1,71 @@
+@model Socio
+@*
+    PartialView reutilizada por Create y Edit: contiene todos los campos del socio.
+*@
+
+<div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+
+<div class="row g-3">
+    <div class="col-md-3">
+        <label asp-for="NumeroSocio" class="form-label"></label>
+        <input asp-for="NumeroSocio" class="form-control" type="number" min="1" max="1000" />
+        <span asp-validation-for="NumeroSocio" class="text-danger small"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="Nombre" class="form-label"></label>
+        <input asp-for="Nombre" class="form-control" />
+        <span asp-validation-for="Nombre" class="text-danger small"></span>
+    </div>
+    <div class="col-md-5">
+        <label asp-for="Apellido" class="form-label"></label>
+        <input asp-for="Apellido" class="form-control" />
+        <span asp-validation-for="Apellido" class="text-danger small"></span>
+    </div>
+
+    <div class="col-md-3">
+        <label asp-for="Dni" class="form-label"></label>
+        <input asp-for="Dni" class="form-control" maxlength="8" />
+        <span asp-validation-for="Dni" class="text-danger small"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="FechaNacimiento" class="form-label"></label>
+        <input asp-for="FechaNacimiento" class="form-control" max="@DateTime.Today.ToString("yyyy-MM-dd")" />
+        <span asp-validation-for="FechaNacimiento" class="text-danger small"></span>
+    </div>
+    <div class="col-md-5">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger small"></span>
+    </div>
+
+    <div class="col-md-4">
+        <label asp-for="Telefono" class="form-label"></label>
+        <input asp-for="Telefono" class="form-control" />
+        <span asp-validation-for="Telefono" class="text-danger small"></span>
+    </div>
+    <div class="col-md-8">
+        <label asp-for="Domicilio" class="form-label"></label>
+        <input asp-for="Domicilio" class="form-control" />
+        <span asp-validation-for="Domicilio" class="text-danger small"></span>
+    </div>
+
+    <div class="col-md-4">
+        <label asp-for="Provincia" class="form-label"></label>
+        <select asp-for="Provincia" asp-items="new SelectList(Provincias.Todas)" class="form-select">
+            <option value="">-- Seleccione --</option>
+        </select>
+        <span asp-validation-for="Provincia" class="text-danger small"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="Categoria" class="form-label"></label>
+        <select asp-for="Categoria" asp-items="Html.GetEnumSelectList<CategoriaSocio>()" class="form-select">
+            <option value="">-- Seleccione --</option>
+        </select>
+        <span asp-validation-for="Categoria" class="text-danger small"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="FechaAlta" class="form-label"></label>
+        <input asp-for="FechaAlta" class="form-control" max="@DateTime.Today.ToString("yyyy-MM-dd")" />
+        <span asp-validation-for="FechaAlta" class="text-danger small"></span>
+    </div>
+</div>

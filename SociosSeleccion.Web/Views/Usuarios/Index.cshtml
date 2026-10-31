@@ -1,0 +1,66 @@
+@model List<Usuario>
+@{
+    ViewData["Title"] = "Usuarios";
+}
+
+<h1 class="h3 mb-3">Usuarios</h1>
+
+<div class="table-responsive">
+    <table class="table align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Usuario</th>
+                <th>Nombre</th>
+                <th>Rol</th>
+                <th>Socio</th>
+                <th>Partidos a los que está inscripto</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var usuario in Model)
+            {
+                <tr>
+                    <td class="fw-semibold">@usuario.NombreUsuario</td>
+                    <td>@usuario.NombreCompleto</td>
+                    <td>
+                        <span class="badge @(usuario.Rol == RolUsuario.Administrador ? "bg-dark" : "bg-celeste")">@usuario.Rol.NombreVisible()</span>
+                    </td>
+                    <td>
+                        @if (usuario.Socio is not null)
+                        {
+                            <a asp-controller="Socios" asp-action="Details" asp-route-id="@usuario.SocioId">N° @usuario.Socio.NumeroSocio</a>
+                        }
+                        else
+                        {
+                            <span class="text-muted">-</span>
+                        }
+                    </td>
+                    <td>
+                        @if (usuario.Socio is null)
+                        {
+                            <span class="text-muted">-</span>
+                        }
+                        else if (!usuario.Socio.Inscripciones.Any())
+                        {
+                            <span class="text-muted">Sin inscripciones</span>
+                        }
+                        else
+                        {
+                            <ul class="list-unstyled mb-0 small">
+                                @foreach (var inscripcion in usuario.Socio.Inscripciones.OrderBy(i => i.Partido?.Fecha))
+                                {
+                                    <li>
+                                        <a asp-controller="Partidos" asp-action="Details" asp-route-id="@inscripcion.PartidoId">Argentina vs @inscripcion.Partido?.Rival</a>
+                                        - @inscripcion.Partido?.Fecha?.ToString("dd/MM/yyyy")
+                                        <span class="text-muted">(@inscripcion.Sector.NombreVisible(), @inscripcion.CantidadEntradas entrada/s)</span>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<p class="text-muted small">@Model.Count usuario(s).</p>

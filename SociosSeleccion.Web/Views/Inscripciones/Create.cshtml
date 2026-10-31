@@ -1,0 +1,58 @@
+@model Inscripcion
+@{
+    ViewData["Title"] = "Anotar socio a un partido";
+}
+
+<h1 class="h3 mb-3">Anotar socio a un partido</h1>
+
+<form asp-action="Create" method="post" class="card card-body">
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+
+    <div class="row g-3">
+        <div class="col-12">
+            <label asp-for="SocioId" class="form-label"></label>
+            <select asp-for="SocioId" asp-items="ViewBag.Socios" class="form-select">
+                <option value="">-- Seleccione un socio --</option>
+            </select>
+            <span asp-validation-for="SocioId" class="text-danger small"></span>
+        </div>
+
+        <div class="col-12">
+            <label asp-for="PartidoId" class="form-label"></label>
+            <select asp-for="PartidoId" asp-items="ViewBag.Partidos" class="form-select">
+                <option value="">-- Seleccione un partido --</option>
+            </select>
+            <span asp-validation-for="PartidoId" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="Sector" class="form-label"></label>
+            <select asp-for="Sector" asp-items="Html.GetEnumSelectList<SectorEstadio>()" class="form-select">
+                <option value="">-- Seleccione --</option>
+            </select>
+            <span asp-validation-for="Sector" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-6">
+            <label asp-for="CantidadEntradas" class="form-label"></label>
+            <input asp-for="CantidadEntradas" class="form-control" type="number" min="1" max="4" />
+            <span asp-validation-for="CantidadEntradas" class="text-danger small"></span>
+        </div>
+    </div>
+
+    <div class="mt-4 d-flex gap-2">
+        <button type="submit" class="btn btn-primary">Confirmar inscripción</button>
+        @if (Model.SocioId.HasValue)
+        {
+            <a asp-controller="Socios" asp-action="Details" asp-route-id="@Model.SocioId" class="btn btn-outline-secondary">Cancelar</a>
+        }
+        else
+        {
+            <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+        }
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

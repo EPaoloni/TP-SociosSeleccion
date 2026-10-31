@@ -1,0 +1,40 @@
+@model Partido
+@*
+    PartialView reutilizada por Create y Edit: contiene los campos del partido.
+*@
+
+<div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+
+<div class="row g-3">
+    <div class="col-md-6">
+        <label asp-for="Rival" class="form-label"></label>
+        <div class="input-group">
+            <span class="input-group-text">Argentina vs</span>
+            <input asp-for="Rival" class="form-control" placeholder="Ej: Brasil" />
+        </div>
+        <span asp-validation-for="Rival" class="text-danger small"></span>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="Fecha" class="form-label"></label>
+        <input asp-for="Fecha" class="form-control" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" />
+        <span asp-validation-for="Fecha" class="text-danger small"></span>
+    </div>
+
+    <div class="col-md-6">
+        <label asp-for="Estadio" class="form-label"></label>
+        <input asp-for="Estadio" class="form-control" placeholder="Ej: Estadio Monumental" />
+        <span asp-validation-for="Estadio" class="text-danger small"></span>
+    </div>
+    <div class="col-md-3">
+        <label asp-for="Competicion" class="form-label"></label>
+        <select asp-for="Competicion" asp-items="new SelectList(Competiciones.Todas)" class="form-select">
+            <option value="">-- Seleccione --</option>
+        </select>
+        <span asp-validation-for="Competicion" class="text-danger small"></span>
+    </div>
+    <div class="col-md-3">
+        <label asp-for="CupoEntradas" class="form-label"></label>
+        <input asp-for="CupoEntradas" class="form-control" type="number" min="1" max="100000" />
+        <span asp-validation-for="CupoEntradas" class="text-danger small"></span>
+    </div>
+</div>

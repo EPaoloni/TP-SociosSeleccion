@@ -1,0 +1,43 @@
+@model Socio
+@{
+    ViewData["Title"] = Model.NombreCompleto;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">@Model.NombreCompleto <small class="text-muted">N° @Model.NumeroSocio</small></h1>
+    <div class="d-flex gap-2">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-secondary">Editar</a>
+        <a asp-action="Index" class="btn btn-outline-secondary">Volver</a>
+    </div>
+</div>
+
+<div class="card card-body mb-4">
+    <dl class="row mb-0">
+        <dt class="col-sm-3">DNI</dt>
+        <dd class="col-sm-3">@Model.Dni</dd>
+        <dt class="col-sm-3">Categoría</dt>
+        <dd class="col-sm-3">@Model.Categoria.NombreVisible()</dd>
+
+        <dt class="col-sm-3">Fecha de nacimiento</dt>
+        <dd class="col-sm-3">@Model.FechaNacimiento?.ToString("dd/MM/yyyy") (@Model.Edad años)</dd>
+        <dt class="col-sm-3">Fecha de alta</dt>
+        <dd class="col-sm-3">@Model.FechaAlta?.ToString("dd/MM/yyyy")</dd>
+
+        <dt class="col-sm-3">Email</dt>
+        <dd class="col-sm-3">@Model.Email</dd>
+        <dt class="col-sm-3">Teléfono</dt>
+        <dd class="col-sm-3">@Model.Telefono</dd>
+
+        <dt class="col-sm-3">Domicilio</dt>
+        <dd class="col-sm-3">@Model.Domicilio</dd>
+        <dt class="col-sm-3">Provincia</dt>
+        <dd class="col-sm-3">@Model.Provincia</dd>
+    </dl>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-2">
+    <h2 class="h5 mb-0">Partidos a los que está anotado/a</h2>
+    <a asp-controller="Inscripciones" asp-action="Create" asp-route-socioId="@Model.Id" class="btn btn-primary btn-sm">+ Anotar a un partido</a>
+</div>
+
+<partial name="_InscripcionesSocio" model="Model.Inscripciones" />

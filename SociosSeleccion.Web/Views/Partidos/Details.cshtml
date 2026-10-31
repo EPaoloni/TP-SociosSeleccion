@@ -1,0 +1,106 @@
+@model PartidoResumen
+@{
+    var partido = Model.Partido;
+    ViewData["Title"] = $"Argentina vs {partido.Rival}";
+    var esAdmin = User.IsInRole(nameof(RolUsuario.Administrador));
+    var socioId = User.FindFirst("SocioId")?.Value;
+    var miInscripcion = Model.Inscripciones.FirstOrDefault(i => i.SocioId.ToString() == socioId);
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">Argentina vs @partido.Rival</h1>
+    <div class="d-flex gap-2">
+        @if (esAdmin && !Model.Jugado)
+        {
+            <a asp-action="Edit" asp-route-id="@partido.Id" class="btn btn-outline-secondary">Editar</a>
+        }
+        <a asp-action="Index" class="btn btn-outline-secondary">Volver</a>
+    </div>
+</div>
+
+<div class="card card-body mb-4">
+    <dl class="row mb-0">
+        <dt class="col-sm-3">Fecha y hora</dt>
+        <dd class="col-sm-3">@partido.Fecha?.ToString("dd/MM/yyyy HH:mm") hs</dd>
+        <dt class="col-sm-3">Competición</dt>
+        <dd class="col-sm-3">@partido.Competicion</dd>
+
+        <dt class="col-sm-3">Estadio</dt>
+        <dd class="col-sm-3">@partido.Estadio</dd>
+        <dt class="col-sm-3">Estado</dt>
+        <dd class="col-sm-3">
+            @if (Model.Jugado)
+            {
+                <span class="badge bg-secondary">Jugado</span>
+            }
+            else if (Model.Agotado)
+            {
+                <span class="badge bg-danger">Agotado</span>
+            }
+            else
+            {
+                <span class="badge bg-success">Inscripción abierta</span>
+            }
+        </dd>
+
+        <dt class="col-sm-3">Cupo de entradas</dt>
+        <dd class="col-sm-3">@partido.CupoEntradas</dd>
+        <dt class="col-sm-3">Reservadas / disponibles</dt>
+        <dd class="col-sm-3">@Model.EntradasReservadas / @Model.EntradasDisponibles</dd>
+    </dl>
+</div>
+
+@if (esAdmin)
+{
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <h2 class="h5 mb-0">Socios inscriptos (@Model.Inscripciones.Count)</h2>
+        @if (!Model.Jugado && !Model.Agotado)
+        {
+            <a asp-controller="Inscripciones" asp-action="Create" class="btn btn-primary btn-sm">+ Anotar un socio</a>
+        }
+    </div>
+
+    @if (!Model.Inscripciones.Any())
+    {
+        <div class="alert alert-light border">Todavía no hay socios inscriptos a este partido.</div>
+    }
+    else
+    {
+        <table class="table table-sm align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>N° socio</th>
+                    <th>Socio</th>
+                    <th>Sector</th>
+                    <th class="text-center">Entradas</th>
+                    <th>Inscripto el</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var inscripcion in Model.Inscripciones)
+                {
+                    <tr>
+                        <td>@inscripcion.Socio?.NumeroSocio</td>
+                        <td>
+                            <a asp-controller="Socios" asp-action="Details" asp-route-id="@inscripcion.SocioId">@inscripcion.Socio?.NombreCompleto</a>
+                        </td>
+                        <td>@inscripcion.Sector.NombreVisible()</td>
+                        <td class="text-center">@inscripcion.CantidadEntradas</td>
+                        <td>@inscripcion.FechaInscripcion.ToString("dd/MM/yyyy HH:mm")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+else if (miInscripcion is not null)
+{
+    <div class="alert alert-success">
+        Estás anotado/a a este partido: <strong>@miInscripcion.CantidadEntradas</strong> entrada/s en <strong>@miInscripcion.Sector.NombreVisible()</strong>.
+        <a asp-controller="MisPartidos" asp-action="Index" class="alert-link">Ver mis partidos</a>
+    </div>
+}
+else if (!Model.Jugado && !Model.Agotado)
+{
+    <a asp-controller="MisPartidos" asp-action="Create" asp-route-partidoId="@partido.Id" class="btn btn-primary">Anotarme a este partido</a>
+}

@@ -1,0 +1,32 @@
+@model Socio
+@{
+    ViewData["Title"] = "Eliminar socio";
+}
+
+<h1 class="h3 mb-3">Eliminar socio</h1>
+
+<div class="alert alert-warning">
+    ¿Está seguro de que desea eliminar al socio <strong>@Model.NombreCompleto</strong> (N° @Model.NumeroSocio)?
+    @if (Model.Inscripciones.Any())
+    {
+        <br />
+        <span>También se cancelarán sus <strong>@Model.Inscripciones.Count</strong> inscripción(es) a partidos.</span>
+    }
+    <br />
+    <span>Si el socio tiene usuario, también se eliminará.</span>
+</div>
+
+<dl class="row">
+    <dt class="col-sm-3">DNI</dt>
+    <dd class="col-sm-9">@Model.Dni</dd>
+    <dt class="col-sm-3">Categoría</dt>
+    <dd class="col-sm-9">@Model.Categoria.NombreVisible()</dd>
+    <dt class="col-sm-3">Email</dt>
+    <dd class="col-sm-9">@Model.Email</dd>
+</dl>
+
+<form asp-action="Delete" method="post" class="d-flex gap-2">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+</form>

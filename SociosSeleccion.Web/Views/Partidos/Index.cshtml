@@ -1,0 +1,81 @@
+@model List<PartidoResumen>
+@{
+    ViewData["Title"] = "Partidos";
+    var esSocio = User.IsInRole(nameof(RolUsuario.Socio));
+    var esAdmin = User.IsInRole(nameof(RolUsuario.Administrador));
+    var socioId = User.FindFirst("SocioId")?.Value;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">Partidos</h1>
+    @if (esAdmin)
+    {
+        <a asp-action="Create" class="btn btn-primary">+ Nuevo partido</a>
+    }
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">Todavía no hay partidos cargados.</div>
+}
+
+<div class="table-responsive">
+    <table class="table table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Fecha</th>
+                <th>Partido</th>
+                <th>Competición</th>
+                <th>Estadio</th>
+                <th class="text-center">Cupo</th>
+                <th class="text-center">Disponibles</th>
+                <th class="text-center">Inscriptos</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var resumen in Model)
+            {
+                var partido = resumen.Partido;
+                var yaAnotado = resumen.Inscripciones.Any(i => i.SocioId.ToString() == socioId);
+                <tr class="@(resumen.Jugado ? "text-muted" : "")">
+                    <td class="text-nowrap">@partido.Fecha?.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td class="fw-semibold">Argentina vs @partido.Rival</td>
+                    <td>@partido.Competicion</td>
+                    <td>@partido.Estadio</td>
+                    <td class="text-center">@partido.CupoEntradas</td>
+                    <td class="text-center">
+                        @if (resumen.Jugado)
+                        {
+                            <span class="badge bg-secondary">Jugado</span>
+                        }
+                        else if (resumen.Agotado)
+                        {
+                            <span class="badge bg-danger">Agotado</span>
+                        }
+                        else
+                        {
+                            @resumen.EntradasDisponibles
+                        }
+                    </td>
+                    <td class="text-center">@resumen.Inscripciones.Count</td>
+                    <td class="text-end text-nowrap">
+                        <a asp-action="Details" asp-route-id="@partido.Id" class="btn btn-sm btn-outline-primary">Ver</a>
+                        @if (esAdmin && !resumen.Jugado)
+                        {
+                            <a asp-action="Edit" asp-route-id="@partido.Id" class="btn btn-sm btn-outline-secondary">Editar</a>
+                        }
+                        @if (esSocio && yaAnotado)
+                        {
+                            <span class="badge bg-success ms-1">Anotado/a</span>
+                        }
+                        else if (esSocio && !resumen.Jugado && !resumen.Agotado)
+                        {
+                            <a asp-controller="MisPartidos" asp-action="Create" asp-route-partidoId="@partido.Id" class="btn btn-sm btn-primary">Anotarme</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

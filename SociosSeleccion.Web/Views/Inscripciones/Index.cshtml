@@ -1,0 +1,54 @@
+@model List<Inscripcion>
+@{
+    ViewData["Title"] = "Inscripciones a partidos";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">Inscripciones a partidos</h1>
+    <a asp-action="Create" class="btn btn-primary">+ Nueva inscripción</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No hay inscripciones registradas.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Partido</th>
+                    <th>Socio</th>
+                    <th>Sector</th>
+                    <th class="text-center">Entradas</th>
+                    <th>Inscripto el</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var inscripcion in Model)
+                {
+                    <tr>
+                        <td>@inscripcion.Partido?.Descripcion</td>
+                        <td>
+                            <a asp-controller="Socios" asp-action="Details" asp-route-id="@inscripcion.SocioId">
+                                @inscripcion.Socio?.NombreCompleto
+                            </a>
+                            <span class="text-muted small">(N° @inscripcion.Socio?.NumeroSocio)</span>
+                        </td>
+                        <td>@inscripcion.Sector.NombreVisible()</td>
+                        <td class="text-center">@inscripcion.CantidadEntradas</td>
+                        <td>@inscripcion.FechaInscripcion.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td class="text-end">
+                            <form asp-action="Cancelar" asp-route-id="@inscripcion.Id" method="post"
+                                  onsubmit="return confirm('¿Cancelar esta inscripción?');">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Cancelar</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

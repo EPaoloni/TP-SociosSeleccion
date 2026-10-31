@@ -1,0 +1,77 @@
+@model SocioIndexViewModel
+@{
+    ViewData["Title"] = "Socios";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">Socios</h1>
+    <a asp-action="Create" class="btn btn-primary">+ Nuevo socio</a>
+</div>
+
+@* Buscador *@
+<form asp-action="Index" method="get" class="card card-body mb-3">
+    <div class="row g-2 align-items-end">
+        <div class="col-md-4">
+            <label asp-for="Filtro.Apellido" class="form-label"></label>
+            <input asp-for="Filtro.Apellido" class="form-control" placeholder="Ej: Gómez" />
+        </div>
+        <div class="col-md-3">
+            <label asp-for="Filtro.Dni" class="form-label"></label>
+            <input asp-for="Filtro.Dni" class="form-control" placeholder="Ej: 35123456" />
+        </div>
+        <div class="col-md-3">
+            <label asp-for="Filtro.Categoria" class="form-label"></label>
+            <select asp-for="Filtro.Categoria" asp-items="Html.GetEnumSelectList<CategoriaSocio>()" class="form-select">
+                <option value="">Todas</option>
+            </select>
+        </div>
+        <div class="col-md-2 d-flex gap-2">
+            <button type="submit" class="btn btn-secondary flex-fill">Buscar</button>
+            <a asp-action="Index" class="btn btn-outline-secondary" title="Limpiar filtros">&times;</a>
+        </div>
+    </div>
+</form>
+
+@if (!Model.Socios.Any())
+{
+    <div class="alert alert-info">No se encontraron socios con esos criterios.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>N°</th>
+                    <th>Apellido y nombre</th>
+                    <th>DNI</th>
+                    <th>Categoría</th>
+                    <th>Provincia</th>
+                    <th>Email</th>
+                    <th class="text-center">Partidos</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var socio in Model.Socios)
+                {
+                    <tr>
+                        <td>@socio.NumeroSocio</td>
+                        <td>@socio.NombreCompleto</td>
+                        <td>@socio.Dni</td>
+                        <td><span class="badge bg-celeste">@socio.Categoria.NombreVisible()</span></td>
+                        <td>@socio.Provincia</td>
+                        <td>@socio.Email</td>
+                        <td class="text-center">@socio.Inscripciones.Count</td>
+                        <td class="text-end text-nowrap">
+                            <a asp-action="Details" asp-route-id="@socio.Id" class="btn btn-sm btn-outline-primary">Ver</a>
+                            <a asp-action="Edit" asp-route-id="@socio.Id" class="btn btn-sm btn-outline-secondary">Editar</a>
+                            <a asp-action="Delete" asp-route-id="@socio.Id" class="btn btn-sm btn-outline-danger">Eliminar</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <p class="text-muted small">@Model.Socios.Count socio(s) encontrados.</p>
+}

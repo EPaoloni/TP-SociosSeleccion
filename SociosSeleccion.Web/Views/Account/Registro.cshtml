@@ -1,0 +1,59 @@
+@model RegistroUsuario
+@{
+    ViewData["Title"] = "Crear mi usuario";
+}
+
+<div class="row justify-content-center">
+    <div class="col-sm-10 col-md-7 col-lg-5">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h1 class="h4 mb-1 text-center">Crear mi usuario</h1>
+                <p class="text-muted small text-center mb-3">
+                    Si ya sos socio/a, ingresá tu N° de socio y tu DNI para crear tu usuario.
+                </p>
+
+                <form asp-action="Registro" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger small mb-2"></div>
+
+                    <div class="row g-3">
+                        <div class="col-sm-5">
+                            <label asp-for="NumeroSocio" class="form-label"></label>
+                            <input asp-for="NumeroSocio" class="form-control" type="number" min="1" max="1000" />
+                            <span asp-validation-for="NumeroSocio" class="text-danger small"></span>
+                        </div>
+                        <div class="col-sm-7">
+                            <label asp-for="Dni" class="form-label"></label>
+                            <input asp-for="Dni" class="form-control" maxlength="8" />
+                            <span asp-validation-for="Dni" class="text-danger small"></span>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="NombreUsuario" class="form-label"></label>
+                            <input asp-for="NombreUsuario" class="form-control" />
+                            <span asp-validation-for="NombreUsuario" class="text-danger small"></span>
+                        </div>
+                        <div class="col-sm-6">
+                            <label asp-for="Contrasena" class="form-label"></label>
+                            <input asp-for="Contrasena" class="form-control" />
+                            <span asp-validation-for="Contrasena" class="text-danger small"></span>
+                        </div>
+                        <div class="col-sm-6">
+                            <label asp-for="ConfirmarContrasena" class="form-label"></label>
+                            <input asp-for="ConfirmarContrasena" class="form-control" />
+                            <span asp-validation-for="ConfirmarContrasena" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 mt-4">Crear usuario</button>
+                </form>
+
+                <p class="text-center small mt-3 mb-0">
+                    ¿Ya tenés usuario? <a asp-action="Login">Iniciá sesión</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
